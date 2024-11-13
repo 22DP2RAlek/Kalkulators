@@ -1,70 +1,85 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const answerBox = document.forms['form1'].answer;
-    const historyButton = document.getElementById('history');
-    const historyModal = document.getElementById('history-modal');
-    const closeHistoryButton = document.getElementById('close-history');
-    const historyList = document.getElementById('history-list');
+const screen = document.getElementById('calc-screen');
+const buttons = document.querySelectorAll('.calc-button');
 
-    let calculationHistory = []; // Array to store history
+let inp1 = "";
+let inp2 = "";
+let currentOperator = null;
 
-    // Handle number and operator button clicks
-    const buttons = document.querySelectorAll('.btn');
-    buttons.forEach(button => {
-        button.addEventListener('click', function () {
-            answerBox.value += this.getAttribute('data-value');
-        });
+const historyList = document.getElementById('history-list');
+let history = JSON.parse(localStorage.getItem('history')) || [];
+
+function updateHistory() {
+    historyList.innerHTML = "";
+    history.forEach((entry, index) => {
+        const li = document.createElement('li');
+        li.classList.add('history-item');
+        li.textContent = entry;
+
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = "Delete";
+        deleteButton.classList.add('delete-history');
+        deleteButton.addEventListener('click', () => deleteHistory(index));
+
+        li.appendChild(deleteButton);
+        historyList.appendChild(li);
     });
+}
 
-    // Handle equals button click to evaluate the expression
-    document.getElementById('equals').addEventListener('click', function () {
-        let expression = answerBox.value.trim();
+updateHistory();
 
-        if (expression === "") {
-            answerBox.value = "Error: Empty Input";
-            return;
+function deleteHistory(index) {
+    history.splice(index, 1);
+    localStorage.setItem('history', JSON.stringify(history));
+    updateHistory();
+}
+
+buttons.forEach(button => {
+    button.addEventListener('click', () => {
+        const buttonValue = button.textContent;
+        if (buttonValue === "AC") {
+            screen.value = "0";   
+            inp1 = "";            
+            inp2 = "";            
+            currentOperator = null;
         }
 
-        try {
-            let result = eval(expression);  // Evaluate the expression
-            answerBox.value = result;
-
-            // Save this calculation to history
-            calculationHistory.push(`${expression} = ${result}`);
-        } catch (error) {
-            answerBox.value = "Error: Invalid Expression";
+        else if (buttonValue === "+" || buttonValue === "-" || buttonValue === "x" || buttonValue === "/") {
+            inp1 = screen.value;           
+            currentOperator = buttonValue; 
+            screen.value = "";           
         }
-    });
+        else if (buttonValue === "=") {
+            inp2 = screen.value;          
+            let result;
 
-    // Handle the Clear All button click to reset the input box
-    document.getElementById('clear').addEventListener('click', function () {
-        answerBox.value = '';  // Clear the answer box
-    });
+            if (currentOperator === '+') {
+                result = parseFloat(inp1) + parseFloat(inp2);
+            } else if (currentOperator === '-') {
+                result = parseFloat(inp1) - parseFloat(inp2);
+            } else if (currentOperator === '/') {
+                result = parseFloat(inp1) / parseFloat(inp2);
+            } else if (currentOperator === 'x') {
+                result = parseFloat(inp1) * parseFloat(inp2);
+            }
 
-    // Show the history modal when the "History" button is clicked
-    historyButton.addEventListener('click', function () {
-        // Clear the existing list
-        historyList.innerHTML = '';
+            screen.value = result;
+            const historyEntry = `${inp1} ${currentOperator} ${inp2} = ${result}`;
+            history.push(historyEntry);
 
-        // Add each calculation to the history list
-        calculationHistory.forEach((item) => {
-            const listItem = document.createElement('li');
-            listItem.textContent = item;
-            historyList.appendChild(listItem);
-        });
+            localStorage.setItem('history', JSON.stringify(history));
+            updateHistory();
 
-        // Show the modal
-        historyModal.style.display = 'block';
-    });
-
-    // Close the history modal when the "Close" button is clicked
-    closeHistoryButton.addEventListener('click', function () {
-        historyModal.style.display = 'none';
-    });
-
-    // Close the modal if the user clicks anywhere outside of it
-    window.addEventListener('click', function (event) {
-        if (event.target === historyModal) {
-            historyModal.style.display = 'none';
+            inp1 = result;  
+            inp2 = "";
+            currentOperator = null;
+        }
+     
+        else {
+            if (screen.value === "0") {
+                screen.value = buttonValue;
+            } else {
+                screen.value += buttonValue;
+            }
         }
     });
 });

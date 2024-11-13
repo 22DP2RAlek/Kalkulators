@@ -3,47 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JavaScript Calculator</title>
-    <link rel="stylesheet" href="style.css">
+
+    <link rel="stylesheet" href="styles.css">
+    <title>Calculator</title>
 </head>
 <body>
-    <h1>JavaScript Simple Calculator</h1>
     
-    <div class="calculator-container">
-        <div class="history">
-            <h3>Calculation History</h3>
-            <ul id="history-list"></ul>
-        </div>
+    <div class="buttons">
 
-        <div class="calculator">
-            <form name="form1">
-                <input id="calc" type="text" name="answer" disabled>
-                <div class="buttons">
-                    <input type="button" value="1" onclick="appendToDisplay('1')">
-                    <input type="button" value="2" onclick="appendToDisplay('2')">
-                    <input type="button" value="3" onclick="appendToDisplay('3')">
-                    <input type="button" value="+" onclick="appendToDisplay('+')">
-                    <br>
-                    <input type="button" value="4" onclick="appendToDisplay('4')">
-                    <input type="button" value="5" onclick="appendToDisplay('5')">
-                    <input type="button" value="6" onclick="appendToDisplay('6')">
-                    <input type="button" value="-" onclick="appendToDisplay('-')">
-                    <br>
-                    <input type="button" value="7" onclick="appendToDisplay('7')">
-                    <input type="button" value="8" onclick="appendToDisplay('8')">
-                    <input type="button" value="9" onclick="appendToDisplay('9')">
-                    <input type="button" value="*" onclick="appendToDisplay('*')">
-                    <br>
-                    <input type="button" value="/" onclick="appendToDisplay('/')">
-                    <input type="button" value="0" onclick="appendToDisplay('0')">
-                    <input type="button" value="." onclick="appendToDisplay('.')">
-                    <input type="button" value="=" onclick="calculateResult()">
-                    <br>
-                    <input type="button" value="Clear All" onclick="clearDisplay()" id="clear">
-                </div>
-            </form>
+        <input type="text" id="calc-screen" class="calc-screen" disabled placeholder="0">
+        <div class="button-grid">
+        <button class="calc-button">1</button>
+        <button class="calc-button">2</button>
+        <button class="calc-button">3</button>
+        <button class="calc-button">x</button>
+
+        <button class="calc-button">4</button>
+        <button class="calc-button">5</button>
+        <button class="calc-button">6</button>
+        <button class="calc-button">/</button>
+
+        <button class="calc-button">7</button>
+        <button class="calc-button">8</button>
+        <button class="calc-button">9</button>
+        <button class="calc-button">+</button>
+
+        <button class="calc-button">AC</button>
+        <button class="calc-button">0</button>
+        <button class="calc-button">.</button>
+        <button class="calc-button">-</button>
+
+        <button class="calc-button">=</button>
         </div>
     </div>
+    <div class="history">
+        <h3>History</h3>
+        <ul id="history-list"></ul>
+    </div>
+
 
     <script src="script.js"></script>
 </body>
